@@ -69,7 +69,7 @@ void _setTimeout(void)
 // This routine is called with interrupts off (i.e. in a critical section)
 
 {
-	uint32_t usedTicks,slip,newTO,currentReading;
+	uint32_t newTO,currentReading;
 
 	// We are changing the timeout, so soak up whatever had been used - get the reading
 	while ((currentReading=LPC_WKT->COUNT)!=LPC_WKT->COUNT);
@@ -78,17 +78,11 @@ void _setTimeout(void)
 	LPC_WKT->CTRL=WKT_CLEAR;
 
 	if (currentReading<=_nextTO)
-	{
-		usedTicks=(_nextTO-currentReading)/TICKS_PER_MS;
-		_ticks+=usedTicks;
-		slip=(_nextTO-currentReading)%TICKS_PER_MS;
-	}
+		_ticks+=(_nextTO-currentReading)/TICKS_PER_MS;
 	else
-	{
 		// This is just in case we wrapped around
-		usedTicks=_nextTO/TICKS_PER_MS;
-		slip=0;
-	}
+		_ticks+=_nextTO/TICKS_PER_MS;
+
 	// Now find the time for the next one to mature - be aware the interval timer is still running here
 	if (timerHead)
 	{
@@ -109,7 +103,7 @@ void _setTimeout(void)
 	// Whatever happened, this is our new timeout value
 	_nextTO=newTO;
 
-	LPC_WKT->COUNT=_nextTO; //@@@ -slip;
+	LPC_WKT->COUNT=_nextTO;
 }
 // ============================================================================================
 void _removeFromList(timerType *t)
