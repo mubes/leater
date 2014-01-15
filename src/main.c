@@ -77,10 +77,6 @@ int main(void)
 {
 
 	uint32_t flagSet;
-	//@@@
-	uint32_t oldTicks=0,newTicks=0;
-	//@@@
-
 	BOOL newConfig;
 
 
@@ -150,15 +146,6 @@ int main(void)
 			{
 				ASSERT(FALSE);;
 			}
-
-			//@@@
-			newTicks=timerSecs();
-			if (newTicks>(oldTicks+2))
-			{
-				ASSERT(FALSE);
-			}
-			oldTicks=newTicks;
-			//@@@
 		}
 #ifdef DEBUG
 		_heapCheck();
