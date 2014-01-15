@@ -425,7 +425,7 @@ COMMAND(_dumpparam)
 			(sysConfig.setPoint % DEGREE * 10) / DEGREE);
 	commandprintf("[%s] Parameters 		: Cp=%d Ci=%d Cd=%d\n", sysConfigStrings[CONFIG_ITEM_PID], sysConfig.Cp, sysConfig.Ci,
 			sysConfig.Cd);
-	commandprintf("[%s] LowPass 	              : %d\n", sysConfigStrings[CONFIG_ITEM_K], sysConfig.k);
+	commandprintf("[%s] LowPass 	                : %d\n", sysConfigStrings[CONFIG_ITEM_K], sysConfig.k);
 	commandprintf("[%s] Report interval: %d S\n", sysConfigStrings[CONFIG_ITEM_recordInterval], sysConfig.recordInterval);
 	commandprintf("[%s] Autorun        : ", sysConfigStrings[CONFIG_ITEM_defaultProfile]);
 	if (sysConfig.defaultProfile <= MAX_PROFILES) commandprintf("%d\n", sysConfig.defaultProfile);
