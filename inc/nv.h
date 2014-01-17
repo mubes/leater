@@ -24,37 +24,40 @@ typedef enum {NV_OK, NV_ERROR, NV_ENDSTATE} nvState;
 // ----- nv Iterators
 typedef struct
 {
-	uint32_t *rp;
-	nvState state;
+    uint32_t *rp;
+    nvState state;
 } nvIterator;
 
 // ============================================================================================
 // Information about the part
 // --------------------------
-uint32_t nvRead_partID(void);							// Read the ROM version identifier
-uint32_t nvRead_partVersion(void);						// Read the part identifier
+uint32_t nvRead_partID(void);                           // Read the ROM version identifier
+uint32_t nvRead_partVersion(void);                      // Read the part identifier
 
 // Read/write to/from NV
 // ---------------------
-BOOL nvWrite_entry(uint32_t val_to_write);				// Write value to store
-uint32_t nvGetSpace(void);								// Return the amount of free space left
+BOOL nvWrite_entry(uint32_t val_to_write);              // Write value to store
+uint32_t nvGetSpace(void);                              // Return the amount of free space left
 uint32_t nvTotalSpace(void);
-BOOL nvFlush(void);										// Flush the whole of the log memory
+BOOL nvFlush(void);                                     // Flush the whole of the log memory
 // Return total space in NV memory
-uint32_t nvTotalSpace(void);							// Iterator over NV storage for read access
+uint32_t nvTotalSpace(void);                            // Iterator over NV storage for read access
 
 // ----------------------------------------
-nvState nvIteratorState(nvIterator *n);					// Return current state of iterator
-uint32_t nvIteratorNext(nvIterator *n);					// Get next entry from nv store
-void nvInitIterator(nvIterator *n);						// Initialise read iterator
+nvState nvIteratorState(nvIterator *n);                 // Return current state of iterator
+uint32_t nvIteratorNext(nvIterator *n);                 // Get next entry from nv store
+void nvInitIterator(nvIterator *n);                     // Initialise read iterator
 
 // Configuration storage read/write
 // --------------------------------
-BOOL nvWriteConfig(const ConfigStoreType *c);			// Scrub and re-write the config to nv memory
-void nvReadConfig(ConfigStoreType *c);					// Get configuration from nv ram into config buffer
+BOOL nvWriteConfig(const ConfigStoreType
+                   *c);           // Scrub and re-write the config to nv memory
+void nvReadConfig(ConfigStoreType
+                  *c);                  // Get configuration from nv ram into config buffer
 
 // ...and the initialisation function
 // ----------------------------------
-BOOL nvInit(void);										// Initialisation function for non-volatile memory
+BOOL nvInit(
+    void);                                      // Initialisation function for non-volatile memory
 // ============================================================================================
 #endif /* NV_H_ */

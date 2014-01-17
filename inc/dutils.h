@@ -6,7 +6,7 @@
 
 #ifdef DEBUG
 #define ASSERT(x) if (!(x)) __ASM volatile("BKPT #01");
-//#define NV_STORE_START 0x3400				// Storage range for logging in debug mode
+//#define NV_STORE_START 0x3400             // Storage range for logging in debug mode
 #else
 #define ASSERT(x)
 #endif
@@ -21,11 +21,11 @@
 #define dringbuffer_putByte(x,y) if (!dringbuffer_full(x)) { rb_##x.s[(rb_##x.wp=(rb_##x.wp+1)%rb_##x ##_size)]=y; }
 #define dringbuffer_getByte(x) ((!dringbuffer_empty(x))?rb_##x.s[(rb_##x.rp=(rb_##x.rp+1)%rb_##x ##_size)]:0)
 
-#define _dabs(x) ((x<0)?-x:x)								/* Get absolute value of operand */
-#define _dsign(x) ((x<0)?-1:1)								/* Get sign of operand */
-#define _dsignnumdiv(a,b) (((a)>=0)?(a)/(b):-((-(a))/(b)))	/* Performed signed division correctly */
-void denter_critical(void);			  						// Enter a critical section
-void dleave_critical(void);									// Exit a critical section
+#define _dabs(x) ((x<0)?-x:x)                               /* Get absolute value of operand */
+#define _dsign(x) ((x<0)?-1:1)                              /* Get sign of operand */
+#define _dsignnumdiv(a,b) (((a)>=0)?(a)/(b):-((-(a))/(b)))  /* Performed signed division correctly */
+void denter_critical(void);                                 // Enter a critical section
+void dleave_critical(void);                                 // Exit a critical section
 // ============================================================================================
 
 #endif /* DUTILS_H_ */

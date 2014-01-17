@@ -32,15 +32,15 @@ BOOL _getConfig(void)
 // Read config and check version numbers, updating if necessary
 
 {
-	nvReadConfig(&sysConfig);
+    nvReadConfig(&sysConfig);
 
-	if (sysConfig.version != LEATER_VERSION_NUMBER)
-	{
-		nvWriteConfig(&defaultSysConfig);
-		nvReadConfig(&sysConfig);
-		return TRUE;
-	}
-	return FALSE;
+    if (sysConfig.version != LEATER_VERSION_NUMBER)
+        {
+            nvWriteConfig(&defaultSysConfig);
+            nvReadConfig(&sysConfig);
+            return TRUE;
+        }
+    return FALSE;
 }
 // ============================================================================================
 #ifdef DEBUG
@@ -52,21 +52,25 @@ uint32_t * const freemem = &_pvHeapStart;
 void _prepareHeapCheck(void)
 
 {
-	// Write some data which we hope won't change
-	uint32_t i=0;
-	while (i<CHECK_LEN) { freemem[i]=i; i++; }
+    // Write some data which we hope won't change
+    uint32_t i=0;
+    while (i<CHECK_LEN)
+        {
+            freemem[i]=i;
+            i++;
+        }
 }
 // ============================================================================================
 void _heapCheck(void)
 
 {
-	// Write some data which we hope won't change
-	uint32_t i=0;
-	while (i<CHECK_LEN)
-		{
-			ASSERT(freemem[i]==i);
-			i++;
-		}
+    // Write some data which we hope won't change
+    uint32_t i=0;
+    while (i<CHECK_LEN)
+        {
+            ASSERT(freemem[i]==i);
+            i++;
+        }
 }
 #endif
 // ============================================================================================
@@ -76,81 +80,81 @@ int main(void)
 
 {
 
-	uint32_t flagSet;
-	BOOL newConfig;
+    uint32_t flagSet;
+    BOOL newConfig;
 
 
-	// Wake up the system
-	SystemCoreClockUpdate();
+    // Wake up the system
+    SystemCoreClockUpdate();
 #ifdef DEBUG
-	_prepareHeapCheck();
+    _prepareHeapCheck();
 #endif
-	timersInit();
-	uartInit();
-	init_printf(0, uartPrintfPutchar);
-	ledInit();
-	bodInit();
-	logInit();
-	newConfig=_getConfig();
-	flagInit();
-	gpioInit();
-	gpioHeat(OFF);
-	commandInit();
-	stateInit();
-	sensorInit();
-	profileInit();
-	if (newConfig)
-		printf("Config Defaults Version %08X loaded\n",LEATER_VERSION_NUMBER);
+    timersInit();
+    uartInit();
+    init_printf(0, uartPrintfPutchar);
+    ledInit();
+    bodInit();
+    logInit();
+    newConfig=_getConfig();
+    flagInit();
+    gpioInit();
+    gpioHeat(OFF);
+    commandInit();
+    stateInit();
+    sensorInit();
+    profileInit();
+    if (newConfig)
+        printf("Config Defaults Version %08X loaded\n",LEATER_VERSION_NUMBER);
 
 
-	// ...and enter the main loop
-	while (1)
-	{
-		flagSet = flag_get();
-		if (!flagSet) __WFI();
-		else
-		{
+    // ...and enter the main loop
+    while (1)
+        {
+            flagSet = flag_get();
+            if (!flagSet) __WFI();
+            else
+                {
 #ifdef SENSOR_THERMISTOR
-			if (flagSet & FLAG_ADC_READ)
-			{
-				flagSet &= ~FLAG_ADC_READ;
-				sdadcHandleADCRead();
-			}
+                    if (flagSet & FLAG_ADC_READ)
+                        {
+                            flagSet &= ~FLAG_ADC_READ;
+                            sdadcHandleADCRead();
+                        }
 #endif
-			if (flagSet & FLAG_UARTRX)
-			{
-				flagSet &=~FLAG_UARTRX;
-				uartEvent();
-			}
+                    if (flagSet & FLAG_UARTRX)
+                        {
+                            flagSet &=~FLAG_UARTRX;
+                            uartEvent();
+                        }
 
-			if (flagSet & FLAG_TICK)
-			{
-				flagSet &= ~FLAG_TICK;
-				timerDispatch();
-			}
+                    if (flagSet & FLAG_TICK)
+                        {
+                            flagSet &= ~FLAG_TICK;
+                            timerDispatch();
+                        }
 
-			if (flagSet & FLAG_GOTTEMP)
-			{
-				flagSet &= ~FLAG_GOTTEMP;
-				sensorReadingReady();
-			}
+                    if (flagSet & FLAG_GOTTEMP)
+                        {
+                            flagSet &= ~FLAG_GOTTEMP;
+                            sensorReadingReady();
+                        }
 
-			if (flagSet & FLAG_TEMPCALLBACK)
-			{
-				flagSet &= ~FLAG_TEMPCALLBACK;
-				stateReadingArrived();
-			}
+                    if (flagSet & FLAG_TEMPCALLBACK)
+                        {
+                            flagSet &= ~FLAG_TEMPCALLBACK;
+                            stateReadingArrived();
+                        }
 
-			// There shouldn't be anything left to handle
-			if (flagSet)
-			{
-				ASSERT(FALSE);;
-			}
-		}
+                    // There shouldn't be anything left to handle
+                    if (flagSet)
+                        {
+                            ASSERT(FALSE);;
+                        }
+                }
 #ifdef DEBUG
-		_heapCheck();
+            _heapCheck();
 #endif
-	}
-	return 0;
+        }
+    return 0;
 }
 // ============================================================================================

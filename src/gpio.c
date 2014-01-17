@@ -16,14 +16,14 @@
 void gpioSet_led(uint32_t ledToLight, uint32_t state)
 
 {
-	// Note - inversion is due to sinks, not sources, for LEDs
-	LPC_GPIO_PORT->B0[ledToLight]=!state;
+    // Note - inversion is due to sinks, not sources, for LEDs
+    LPC_GPIO_PORT->B0[ledToLight]=!state;
 }
 // ============================================================================================
 void gpioHeat(uint32_t isOn)
 
 {
-	LPC_GPIO_PORT->B0[GPIO_HEATER]=!isOn;
+    LPC_GPIO_PORT->B0[GPIO_HEATER]=!isOn;
 }
 // ============================================================================================
 void gpioInit(void)
@@ -31,7 +31,7 @@ void gpioInit(void)
 // Initialise the GPOI functions
 
 {
-	LPC_SYSCON ->SYSAHBCLKCTRL |= (1 << 6); // Enable GPIO Register access
-	LPC_GPIO_PORT->DIR0 = (1<<GPIO_HEATER)|(1<<GPIO_GREEN_LED);
+    LPC_SYSCON ->SYSAHBCLKCTRL |= (1 << 6); // Enable GPIO Register access
+    LPC_GPIO_PORT->DIR0 = (1<<GPIO_HEATER)|(1<<GPIO_GREEN_LED);
 }
 // ============================================================================================

@@ -14,10 +14,10 @@
 #include "flags.h"
 #include "timers.h"
 
-static timerType intervalTimer;				// Timer between temperature readings
-static BOOL callback=FALSE;					// Do we want to tell someone we've got a reading?
+static timerType intervalTimer;             // Timer between temperature readings
+static BOOL callback=FALSE;                 // Do we want to tell someone we've got a reading?
 //@@@static
-int32_t currentTemp;						// Most recently read temperature
+int32_t currentTemp;                        // Most recently read temperature
 
 // ============================================================================================
 // ============================================================================================
@@ -32,7 +32,7 @@ int32_t sensorReturnReading(void)
 // Return the most recently obtained reading
 
 {
-	return currentTemp;
+    return currentTemp;
 }
 // ============================================================================================
 uint32_t sensorInterval(void)
@@ -41,11 +41,11 @@ uint32_t sensorInterval(void)
 
 {
 #ifdef SENSOR_THERMISTOR
-	return THERMISTOR_MINIMUM_INTERVAL;
+    return THERMISTOR_MINIMUM_INTERVAL;
 #endif
 
 #ifdef SENSOR_THERMOCOUPLE
-	return THERMOCOUPLE_MINIMUM_INTERVAL;
+    return THERMOCOUPLE_MINIMUM_INTERVAL;
 #endif
 
 }
@@ -56,54 +56,54 @@ void sensorInit(void)
 
 {
 #ifdef SENSOR_THERMISTOR
-	sdadcInit();
-	sdadcStartup();
+    sdadcInit();
+    sdadcStartup();
 #endif
 
 #ifdef SENSOR_THERMOCOUPLE
-	spiInit();
+    spiInit();
 #endif
-	// Perform a fake timeout to get the first sample
-	currentTemp=TEMP_INVALID;
-	sensorTimeout();
+    // Perform a fake timeout to get the first sample
+    currentTemp=TEMP_INVALID;
+    sensorTimeout();
 }
 // ============================================================================================
 void sensorReadingReady(void)
 
 {
-	static int32_t filter;
-	uint32_t newTemp;
+    static int32_t filter;
+    uint32_t newTemp;
 
 #ifdef SENSOR_THERMISTOR
-	newTemp = sdadcGetResult();
+    newTemp = sdadcGetResult();
 #endif
 
 #ifdef SENSOR_THERMOCOUPLE
-	newTemp = spiGet_Result();
+    newTemp = spiGet_Result();
 #endif
 
-	if (newTemp==TEMP_INVALID)
-		// If the value is invalid, then reflect it immediately
-		currentTemp=newTemp;
-	else
-	{
-		// ...we have a genuine reading
-		if (currentTemp==TEMP_INVALID)
-			// This is the first valid reading, so just grab it
-			filter=newTemp<<sysConfig.k;
-		else
-			// This is a subsequent reading - account for it
-			filter=filter-(filter>>sysConfig.k)+newTemp;
+    if (newTemp==TEMP_INVALID)
+        // If the value is invalid, then reflect it immediately
+        currentTemp=newTemp;
+    else
+        {
+            // ...we have a genuine reading
+            if (currentTemp==TEMP_INVALID)
+                // This is the first valid reading, so just grab it
+                filter=newTemp<<sysConfig.k;
+            else
+                // This is a subsequent reading - account for it
+                filter=filter-(filter>>sysConfig.k)+newTemp;
 
-		// Whatever happens, we can now extract the temperature
-		currentTemp=filter>>sysConfig.k;
-	}
+            // Whatever happens, we can now extract the temperature
+            currentTemp=filter>>sysConfig.k;
+        }
 
-	if (callback)
-	{
-		callback=FALSE;
-		flag_post(FLAG_TEMPCALLBACK);
-	}
+    if (callback)
+        {
+            callback=FALSE;
+            flag_post(FLAG_TEMPCALLBACK);
+        }
 }
 // ============================================================================================
 void sensorTimeout(void)
@@ -111,18 +111,18 @@ void sensorTimeout(void)
 // Time to grab another sample
 {
 #ifdef SENSOR_THERMISTOR
-	sdadcGet_sample();
+    sdadcGet_sample();
 #endif
 
 #ifdef SENSOR_THERMOCOUPLE
-	spiRequest_sample();
+    spiRequest_sample();
 #endif
-	timerAdd(&intervalTimer, TIMER_ORIGIN_SENSOR, 0, sensorInterval());
+    timerAdd(&intervalTimer, TIMER_ORIGIN_SENSOR, 0, sensorInterval());
 }
 // ============================================================================================
 void sensorRequestCallback(void)
 
 {
-	callback=TRUE;
+    callback=TRUE;
 }
 // ============================================================================================
